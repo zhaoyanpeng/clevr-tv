@@ -1,0 +1,813 @@
+## <ANS>
+
+<ANS> will be replaced by the actual *answer*. It can be a value from (conditioning on its type: Shape, Color, Size, Material):
+
+{
+"Shape": [
+  "cube", "sphere", "cylinder"
+],
+"Color": [
+  "gray", "red", "blue", "green", "brown", "purple", "cyan", "yellow"
+],
+"Size": [
+  "small", "large"
+],
+"Material": [
+  "rubber", "metal"
+]
+}
+
+It can also be an Integer in object-counting captions. When it is Bool, 
+it does not appear in the captions, i.e., the captions are statements. 
+The truth values of the statements will be evaluated later on. We use only True statements / captions.
+
+
+## In each json file, each block of captions belongs to the same question (caption) type. They may query 
+
+(1) the number of a specific objects;
+(2) statements (true / false);
+(3) object shape;
+(4) object color;
+(5) object size;
+(6) object material.
+
+
+
+## [optional phrase]
+
+Will be kept / removed with a probability of 0.5. Captions should be grammatically correct w/ or w/o optional phrases.
+
+
+## Relation word <R>
+
+"Relation": [
+	"left", "right", "behind", "front"
+]
+
+
+
+
+zero_hop.json
+
+
+[
+
+[
+"There are <ANS> <Z> <C> <M> <S>s.", 
+"The number of <Z> <C> <M> <S>s is <ANS>."
+],
+
+[
+"There are some <Z> <C> <M> <S>s.",
+"Some <Z> <C> <M> <S>s are visible.", 
+"There is a <Z> <C> <M> <S>."
+],
+
+[
+"The <Z> <C> <M> <S> is a <ANS>.",
+"The shape of the <Z> <C> <M> <S> is <ANS>.",
+"The <Z> <C> <M> <S> has a <ANS> shape.",
+"There is a <Z> <C> <M> <S>; it is a <ANS>.",
+"There is a <Z> <C> <M> <S>; its shape is <ANS>.",
+"There is a <Z> <C> <M> <S>; it has a <ANS> shape."
+],
+
+[
+"The [material of the] <Z> <C> <M> <S> is [made of] <ANS>.",
+"There is a <Z> <C> <M> <S>; its material is [made of] <ANS>.",
+"There is a <Z> <C> <M> <S>; it is [made of] <ANS>."
+],
+
+[
+"The <Z> <C> <M> <S> is [colored] <ANS>.",
+"The color of the <Z> <C> <M> <S> is <ANS>.",
+"There is a <Z> <C> <M> <S>; it is [colored] <ANS>.",
+"There is a <Z> <C> <M> <S>; its color is <ANS>."
+],
+
+[
+"The [size of the] <Z> <C> <M> <S> is <ANS>.",
+"The <Z> <C> <M> <S> has a <ANS> size.",
+"There is a <Z> <C> <M> <S>; it is <ANS>.",
+"There is a <Z> <C> <M> <S>; its size is <ANS>.",
+"There is a <Z> <C> <M> <S>; it has a <ANS> size."
+]
+
+]
+
+
+
+
+two_hop.json
+
+
+[
+
+[
+"There are <ANS> <Z3> <C3> <M3> <S3>s [that are] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>.",
+"The number of <Z3> <C3> <M3> <S3>s [that are] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; there are <ANS> <Z3> <C3> <M3> <S3>s [that are] <R2> it.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; the number of <Z3> <C3> <M3> <S3>s [that are] <R2> it is <ANS>."
+],
+
+[
+"There are some <Z3> <C3> <M3> <S3>s [that are] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; there are some <Z3> <C3> <M3> <S3>s [that are] <R2> it.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; there is a <Z3> <C3> <M3> <S3> [that is] <R2> it."
+],
+
+[
+"The [size of the] <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has a <ANS> size.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its size is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has a <ANS> size."
+],
+
+[
+"The <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is [colored] <ANS>.",
+"The color of the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is [colored] <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its color is <ANS>."
+],
+
+[
+"The [material of the] <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is [made of] <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its material is [made of] <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is [made of] <ANS>."
+],
+
+[
+"The <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is a <ANS>.",
+"The shape of the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has a <ANS> shape.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is a <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its shape is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has a <ANS> shape."
+]
+
+]
+
+
+
+one_hop.json
+
+
+[
+
+[
+"The number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S>.",
+"There is a <Z> <C> <M> <S>; there are <ANS> <Z2> <C2> <M2> <S2>s [that are] <R> it.",
+"There is a <Z> <C> <M> <S>; the number of <Z2> <C2> <M2> <S2>s [that are] <R> it is <ANS>."
+],
+
+[
+"There are some <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S>.",
+"There is a <Z> <C> <M> <S>; there are some <Z2> <C2> <M2> <S2>s [that are] <R> it."
+],
+
+[
+"The [size of the] <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has a <ANS> size.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its size is <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has a <ANS> size."
+],
+
+[
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is [colored] <ANS>.",
+"The color of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is [colored] <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its color is <ANS>."
+],
+
+[
+"The [material of the] <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is [made of] <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its material is [made of] <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is [made of] <ANS>."
+],
+
+[
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is a <ANS>.",
+"The shape of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has a <ANS> shape.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is a <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its shape is <ANS>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has a <ANS> shape."
+]
+
+]
+
+
+
+single_or.json
+
+
+[
+
+[
+"There are <ANS> things that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"There are <ANS> objects that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"The number of things that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>.",
+"The number of objects that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>."
+],
+
+[
+"There are <ANS> <Z3> things that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"There are <ANS> <Z3> objects that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"The number of <Z3> things that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>.",
+"The number of <Z3> objects that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>."
+],
+
+[
+"There are <ANS> <C3> things that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"There are <ANS> <C3> objects that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"The number of <C3> things that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>.",
+"The number of <C3> objects that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>."
+],
+
+[
+"There are <ANS> things that are [either] <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> or <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>.",
+"There are <ANS> objects that are [either] <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> or <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>.",
+"The number of objects that are [either] <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> or <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3> is <ANS>.",
+"The number of things that are [either] <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> or <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3> is <ANS>."
+],
+
+[
+"There are <ANS> <M3> things that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"There are <ANS> <M3> objects that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"The number of <M3> things that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>.",
+"The number of <M3> objects that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>."
+],
+
+[
+"There are <ANS> <S3>s that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s.",
+"The number of <S3>s that are [either] <Z> <C> <M> <S>s or <Z2> <C2> <M2> <S2>s is <ANS>."
+],
+
+[
+"There are <ANS> things that are [either] <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> or <Z3> <C3> <M3> <S3>s.",
+"There are <ANS> objects that are [either] <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> or <Z3> <C3> <M3> <S3>s.",
+"The number of things that are [either] <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> or <Z3> <C3> <M3> <S3>s is <ANS>.",
+"The number of objects that are [either] <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> or <Z3> <C3> <M3> <S3>s is <ANS>."
+],
+
+[
+"There are <ANS> things that are [either] <Z> <C> <M> <S>s or <Z3> <C3> <M3> <S3>s [that are] <R> the <Z2> <C2> <M2> <S2>.",
+"There are <ANS> objects that are [either] <Z> <C> <M> <S>s or <Z3> <C3> <M3> <S3>s [that are] <R> the <Z2> <C2> <M2> <S2>.",
+"The number of things that are [either] <Z> <C> <M> <S>s or <Z3> <C3> <M3> <S3>s [that are] <R> the <Z2> <C2> <M2> <S2> is <ANS>.",
+"The number of objects that are [either] <Z> <C> <M> <S>s or <Z3> <C3> <M3> <S3>s [that are] <R> the <Z2> <C2> <M2> <S2> is <ANS>."
+]
+
+]
+
+
+
+comparison.json
+
+
+[
+
+[
+"The <Z> <C> <M> <S> and the <Z2> <C2> <M2> <S2> have the same size.",
+"The <Z> <C> <M> <S> and the <Z2> <C2> <M2> <S2> are of the same size.",
+"The size of the <Z> <C> <M> <S> is the same as the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> is the same size as the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> has the same size as the <Z2> <C2> <M2> <S2>."
+],
+
+[
+"The <Z> <C> <M> <S> and the <Z2> <C2> <M2> <S2> have the same color.",
+"The <Z> <C> <M> <S> and the <Z2> <C2> <M2> <S2> are of the same color.",
+"The color of the <Z> <C> <M> <S> is the same as the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> has the same color as the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> is the same color as the <Z2> <C2> <M2> <S2>."
+],
+
+[
+"The <Z> <C> <M> <S> and the <Z2> <C2> <M2> <S2> have the same material.",
+"The <Z> <C> <M> <S> and the <Z2> <C2> <M2> <S2> are [made] of the same material.",
+"The material of the <Z> <C> <M> <S> is the same as the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> has the same material as the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> is [made of] the same material as the <Z2> <C2> <M2> <S2>."
+],
+
+[
+"The <Z> <C> <M> <S> and the <Z2> <C2> <M2> <S2> have the same shape.",
+"The <Z> <C> <M> <S> and the <Z2> <C2> <M2> <S2> are of the same shape.",
+"The <Z> <C> <M> <S> has the same shape as the <Z2> <C2> <M2> <S2>.",
+"The shape of the <Z> <C> <M> <S> is the same as the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> is the same shape as the <Z2> <C2> <M2> <S2>."
+],
+
+[
+"The size of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is the same as the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has the same size as the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> have the same size.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has the same size as the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is the same size as the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its size is the same as the <Z3> <C3> <M3> <S3>."
+],
+
+[
+"The size of the <Z> <C> <M> <S> is the same as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> has the same size as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2> have the same size.",
+"There is a <Z> <C> <M> <S>; it has the same size as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"There is a <Z> <C> <M> <S>; its size is the same as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"There is a <Z> <C> <M> <S>; it is the same size as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>."
+],
+
+[
+"The size of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is the same as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has the same size as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3> have the same size.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has the same size as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its size is the same as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is the same size as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>."
+],
+
+[
+"The color of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is the same as the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has the same color as the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> have the same color.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has the same color as the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is the same color as the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its color is the same as the <Z3> <C3> <M3> <S3>."
+],
+
+[
+"The color of the <Z> <C> <M> <S> is the same as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> has the same color as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2> have the same color.",
+"There is a <Z> <C> <M> <S>; it has the same color as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"There is a <Z> <C> <M> <S>; its color is the same as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"There is a <Z> <C> <M> <S>; it is the same color as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>."
+],
+
+[
+"The color of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is the same as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has the same color as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3> have the same color.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has the same color as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its color is the same as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is the same color as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>."
+],
+
+[
+"The material of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is the same as the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has the same material as the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> have the same material.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> are [made] of the same material.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is [made of] the same material as the <Z3> <C3> <M3> <S3>."
+],
+
+[
+"The material of the <Z> <C> <M> <S> is the same as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> has the same material as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2> have the same material.",
+"The <Z> <C> <M> <S> is [made of] the same material as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2> are [made] of the same material."
+],
+
+[
+"The material of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is the same as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has the same material as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3> have the same material.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is [made of] the same material as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3> are [made] of the same material."
+],
+
+[
+"The shape of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is the same as the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has the same shape as the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> have the same shape.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has the same shape as the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is the same shape as the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its shape is the same as the <Z3> <C3> <M3> <S3>."
+],
+
+[
+"The shape of the <Z> <C> <M> <S> is the same as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> has the same shape as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"The <Z> <C> <M> <S> and the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2> have the same shape.",
+"There is a <Z> <C> <M> <S>; it has the same shape as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"There is a <Z> <C> <M> <S>; its shape is the same as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>.",
+"There is a <Z> <C> <M> <S>; it is the same shape as the <Z3> <C3> <M3> <S3> [that is] <R> the <Z2> <C2> <M2> <S2>."
+],
+
+[
+"The shape of the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is the same as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has the same shape as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"The <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> and the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3> have the same shape.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has the same shape as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its shape is the same as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>.",
+"There is a <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is the same shape as the <Z4> <C4> <M4> <S4> [that is] <R2> the <Z3> <C3> <M3> <S3>."
+]
+
+]
+
+
+
+compare_integer.json
+
+
+[
+
+[
+"There are an equal number of <Z> <C> <M> <S>s and <Z2> <C2> <M2> <S2>s.",
+"There are the same number of <Z> <C> <M> <S>s and <Z2> <C2> <M2> <S2>s.",
+"The number of <Z> <C> <M> <S>s is the same as the number of <Z2> <C2> <M2> <S2>s."
+],
+
+[
+"There are fewer <Z> <C> <M> <S>s than <Z2> <C2> <M2> <S2>s.",
+"The number of <Z> <C> <M> <S>s is less than the number of <Z2> <C2> <M2> <S2>s."
+],
+
+[
+"There are more <Z> <C> <M> <S>s than <Z2> <C2> <M2> <S2>s.",
+"The number of <Z> <C> <M> <S>s is greater than the number of <Z2> <C2> <M2> <S2>s."
+],
+
+[
+"There are the same number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> and <Z3> <C3> <M3> <S3>s.",
+"There are an equal number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> and <Z3> <C3> <M3> <S3>s.",
+"The number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> is the same as the number of <Z3> <C3> <M3> <S3>s."
+],
+
+[
+"There are fewer <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> than <Z3> <C3> <M3> <S3>s.",
+"The number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> is less than the number of <Z3> <C3> <M3> <S3>s."
+],
+
+[
+"There are more <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> than <Z3> <C3> <M3> <S3>s.",
+"The number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> is greater than the number of <Z3> <C3> <M3> <S3>s."
+],
+
+[
+"The number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> is the same as the number of <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>.",
+"There are an equal number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> and <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>.",
+"There are the same number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> and <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>."
+],
+
+[
+"The number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> is less than the number of <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>.",
+"There are fewer <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> than <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>."
+],
+
+[
+"There are more <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> than <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>.",
+"The number of <Z2> <C2> <M2> <S2>s [that are] <R> the <Z> <C> <M> <S> is greater than the number of <Z4> <C4> <M4> <S4>s [that are] <R2> the <Z3> <C3> <M3> <S3>."
+]
+
+]
+
+
+
+single_and.json
+
+
+[
+
+[
+"There are <ANS> <Z3> <C3> <M3> <S3>s that are [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>.",
+"The number of <Z3> <C3> <M3> <S3>s that are [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> is <ANS>."
+],
+
+[
+"The [size of the] <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> has a <ANS> size.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; its size is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; it is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; it has a <ANS> size."
+],
+
+[
+"The color of the <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> is [colored] <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; its color is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; it is [colored] <ANS>."
+],
+
+[
+"The [material of the] <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> is [made of] <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; its material is [made of] <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; it is [made of] <ANS>."
+],
+
+[
+"The <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> is a <ANS>.",
+"The shape of the <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S> has a <ANS> shape.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; it is a <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; its shape is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> that is [both] <R2> the <Z2> <C2> <M2> <S2> and <R> the <Z> <C> <M> <S>; it has a <ANS> shape."
+]
+
+]
+
+
+
+three_hop.json
+
+
+[
+
+[
+"There are <ANS> <Z4> <C4> <M4> <S4>s [that are] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>.",
+"The number of <Z4> <C4> <M4> <S4>s [that are] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; there are <ANS> <Z4> <C4> <M4> <S4>s [that are] <R3> it.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; the number of <Z4> <C4> <M4> <S4>s [that are] <R3> it is <ANS>."
+],
+
+[
+"There are some <Z4> <C4> <M4> <S4>s [that are] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; there are some <Z4> <C4> <M4> <S4>s [that are] <R3> it.",
+"There is a <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; there is a <Z4> <C4> <M4> <S4> [that is] <R3> it."
+],
+
+[
+"The [size of the] <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has a <ANS> size.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is <ANS>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its size is <ANS>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has a <ANS> size."
+],
+
+[
+"The <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is a <ANS>.",
+"The shape of the <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"The <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> has a <ANS> shape.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is a <ANS>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its shape is <ANS>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it has a <ANS> shape."
+],
+
+[
+"The <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is [colored] <ANS>.",
+"The color of the <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is <ANS>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is [colored] <ANS>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its color is <ANS>."
+],
+
+[
+"The [material of the] <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S> is [made of] <ANS>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; its material is [made of] <ANS>.",
+"There is a <Z4> <C4> <M4> <S4> [that is] <R3> the <Z3> <C3> <M3> <S3> [that is] <R2> the <Z2> <C2> <M2> <S2> [that is] <R> the <Z> <C> <M> <S>; it is [made of] <ANS>."
+]
+
+]
+
+
+
+same_relate.json
+
+[
+
+[
+"There are some other things that have the same size as the <Z> <C> <M> <S>.",
+"There is something else that has the same size as the <Z> <C> <M> <S>.",
+"There is another thing that has the same size as the <Z> <C> <M> <S>.",
+"There are some other things that are the same size as the <Z> <C> <M> <S>.",
+"There is something else that is the same size as the <Z> <C> <M> <S>.",
+"There is another thing that is the same size as the <Z> <C> <M> <S>.",
+"There are some other things of the same size as the <Z> <C> <M> <S>.",
+"There is something else of the same size as the <Z> <C> <M> <S>.",
+"There is another thing of the same size as the <Z> <C> <M> <S>."
+],
+
+[
+"There are some other things that have the same color as the <Z> <C> <M> <S>.",
+"There is something else that has the same color as the <Z> <C> <M> <S>.",
+"There is another thing that has the same color as the <Z> <C> <M> <S>.",
+"There are some other things that are the same color as the <Z> <C> <M> <S>.",
+"There is something else that is the same color as the <Z> <C> <M> <S>.",
+"There is another thing that is the same color as the <Z> <C> <M> <S>.",
+"There are some other things of the same color as the <Z> <C> <M> <S>.",
+"There is something else of the same color as the <Z> <C> <M> <S>.",
+"There is another thing of the same color as the <Z> <C> <M> <S>."
+],
+
+[
+"There are some other things that have the same material as the <Z> <C> <M> <S>.",
+"There is something else that has the same material as the <Z> <C> <M> <S>.",
+"There is another thing that has the same material as the <Z> <C> <M> <S>.",
+"There are some other things that are [made of] the same material as the <Z> <C> <M> <S>.",
+"There is something else that is [made of] the same material as the <Z> <C> <M> <S>.",
+"There is another thing that is [made of] the same material as the <Z> <C> <M> <S>.",
+"There are some other things [made] of the same material as the <Z> <C> <M> <S>.",
+"There is something else [made] of the same material as the <Z> <C> <M> <S>.",
+"There is another thing [made] of the same material as the <Z> <C> <M> <S>."
+],
+
+[
+"There are some other things that have the same shape as the <Z> <C> <M> <S>.",
+"There is something else that has the same shape as the <Z> <C> <M> <S>.",
+"There is another thing that has the same shape as the <Z> <C> <M> <S>.",
+"There are some other things that are the same shape as the <Z> <C> <M> <S>.",
+"There is something else that is the same shape as the <Z> <C> <M> <S>.",
+"There is another thing that is the same shape as the <Z> <C> <M> <S>.",
+"There are some other things of the same shape as the <Z> <C> <M> <S>.",
+"There is something else of the same shape as the <Z> <C> <M> <S>.",
+"There is another thing of the same shape as the <Z> <C> <M> <S>."
+],
+
+
+[
+"There are <ANS> other things that are the same size as the <Z> <C> <M> <S>.",
+"The number of other things that are the same size as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other things of the same size as the <Z> <C> <M> <S>.",
+"The number of other things of the same size as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other objects that are the same size as the <Z> <C> <M> <S>.",
+"The number of other objects that are the same size as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other objects of the same size as the <Z> <C> <M> <S>.",
+"The number of other objects of the same size as the <Z> <C> <M> <S> is <ANS>."
+],
+
+[
+"There are <ANS> other things that are the same color as the <Z> <C> <M> <S>.",
+"The number of other things that are the same color as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other things of the same color as the <Z> <C> <M> <S>.",
+"The number of other things of the same color as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other objects that are the same color as the <Z> <C> <M> <S>.",
+"The number of other objects that are the same color as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other objects of the same color as the <Z> <C> <M> <S>.",
+"The number of other objects of the same color as the <Z> <C> <M> <S> is <ANS>."
+],
+
+[
+"The number of other things that are [made of] the same material as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other things that are [made of] the same material as the <Z> <C> <M> <S>.",
+"There are <ANS> other things of the same material as the <Z> <C> <M> <S>.",
+"The number of other things of the same material as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other objects that are the same material as the <Z> <C> <M> <S>.",
+"The number of other objects that are the same material as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other objects of the same material as the <Z> <C> <M> <S>.",
+"The number of other objects of the same material as the <Z> <C> <M> <S> is <ANS>."
+],
+
+[
+"There are <ANS> other things that are the same shape as the <Z> <C> <M> <S>.",
+"The number of other things that are the same shape as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other things of the same shape as the <Z> <C> <M> <S>.",
+"The number of other things of the same shape as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other objects that are the same shape as the <Z> <C> <M> <S>.",
+"The number of other objects that are the same shape as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other objects of the same shape as the <Z> <C> <M> <S>.",
+"The number of other objects of the same shape as the <Z> <C> <M> <S> is <ANS>."
+],
+
+
+[
+"There are some other <Z2> <C2> <M2> <S2>s that have the same size as the <Z> <C> <M> <S>.",
+"There is another <Z2> <C2> <M2> <S2> that has the same size as the <Z> <C> <M> <S>.",
+"There are some other <Z2> <C2> <M2> <S2>s of the same size as the <Z> <C> <M> <S>.",
+"There is another <Z2> <C2> <M2> <S2> of the same size as the <Z> <C> <M> <S>."
+],
+
+[
+"There are some other <Z2> <C2> <M2> <S2>s that have the same color as the <Z> <C> <M> <S>.",
+"There is another <Z2> <C2> <M2> <S2> that has the same color as the <Z> <C> <M> <S>.",
+"There are some other <Z2> <C2> <M2> <S2>s of the same color as the <Z> <C> <M> <S>.",
+"There is another <Z2> <C2> <M2> <S2> of the same color as the <Z> <C> <M> <S>."
+],
+
+[
+"There are some other <Z2> <C2> <M2> <S2>s that have the same material as the <Z> <C> <M> <S>.",
+"There is another <Z2> <C2> <M2> <S2> that has the same material as the <Z> <C> <M> <S>.",
+"There are some other <Z2> <C2> <M2> <S2>s [made] of the same material as the <Z> <C> <M> <S>.",
+"There is another <Z2> <C2> <M2> <S2> [made] of the same material as the <Z> <C> <M> <S>."
+],
+
+[
+"There are some other <Z2> <C2> <M2> <S2>s that have the same shape as the <Z> <C> <M> <S>.",
+"There is another <Z2> <C2> <M2> <S2> that has the same shape as the <Z> <C> <M> <S>.",
+"There are some other <Z2> <C2> <M2> <S2>s of the same shape as the <Z> <C> <M> <S>.",
+"There is another <Z2> <C2> <M2> <S2> of the same shape as the <Z> <C> <M> <S>."
+],
+
+[
+"There are <ANS> other <Z2> <C2> <M2> <S2>s that have the same size as the <Z> <C> <M> <S>.",
+"There are <ANS> other <Z2> <C2> <M2> <S2>s that are the same size as the <Z> <C> <M> <S>.",
+"The number of other <Z2> <C2> <M2> <S2>s that have the same size as the <Z> <C> <M> <S> is <ANS>.",
+"The number of other <Z2> <C2> <M2> <S2>s that are the same size as the <Z> <C> <M> <S> is <ANS>."
+],
+
+[
+"There are <ANS> other <Z2> <C2> <M2> <S2>s that have the same color as the <Z> <C> <M> <S>.",
+"There are <ANS> other <Z2> <C2> <M2> <S2>s that are the same color as the <Z> <C> <M> <S>.",
+"The number of other <Z2> <C2> <M2> <S2>s that have the same color as the <Z> <C> <M> <S> is <ANS>.",
+"The number of other <Z2> <C2> <M2> <S2>s that are the same color as the <Z> <C> <M> <S> is <ANS>."
+],
+
+[
+"There are <ANS> other <Z2> <C2> <M2> <S2>s that have the same material as the <Z> <C> <M> <S>.",
+"The number of other <Z2> <C2> <M2> <S2>s that have the same material as the <Z> <C> <M> <S> is <ANS>.",
+"The number of other <Z2> <C2> <M2> <S2>s that are [made of] the same material as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other <Z2> <C2> <M2> <S2>s that are [made of] the same material as the <Z> <C> <M> <S>."
+],
+
+[
+"There are <ANS> other <Z2> <C2> <M2> <S2>s that have the same shape as the <Z> <C> <M> <S>.",
+"The number of other <Z2> <C2> <M2> <S2>s that have the same shape as the <Z> <C> <M> <S> is <ANS>.",
+"The number of other <Z2> <C2> <M2> <S2>s that are the same shape as the <Z> <C> <M> <S> is <ANS>.",
+"There are <ANS> other <Z2> <C2> <M2> <S2>s that are the same shape as the <Z> <C> <M> <S>."
+],
+
+[
+"The other <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S> is [colored] <ANS>.",
+"The color of the other <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S> is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S>; it is [colored] <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S>; its color is <ANS>."
+],
+
+[
+"The [material of the] other <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S> is [made of] <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S>; it is [made of] <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S>; its material is [made of] <ANS>."
+],
+
+[
+"The other <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S> is a <ANS>.",
+"The shape of the other <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S> is <ANS>.",
+"The other <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S> has a <ANS> shape.",
+"There is another <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S>; it is a <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S>; its shape is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same size as the <Z> <C> <M> <S>; it has a <ANS> shape."
+],
+
+[
+"The [size of the] other <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S> is <ANS>.",
+"The other <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S> has a <ANS> size.",
+"There is another <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S>; it is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S>; its size is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S>; it has a <ANS> size."
+],
+
+[
+"The [material of the] other <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S> is [made of] <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S>; it is [made of] <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S>; its material is [made of] <ANS>."
+],
+
+[
+"The other <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S> is a <ANS>.",
+"The shape of the other <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S> is <ANS>.",
+"The other <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S> has a <ANS> shape.",
+"There is another <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S>; it is a <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S>; its shape is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same color as the <Z> <C> <M> <S>; it has a <ANS> shape."
+],
+
+[
+"The [size of the] other <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S> is <ANS>.",
+"The other <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S> has a <ANS> size.",
+"There is another <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S>; its size is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S>; it is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S>; it has a <ANS> size."
+],
+
+[
+"The other <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S> is [colored] <ANS>.",
+"The color of the other <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S> is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S>; its color is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S>; it is [colored] <ANS>."
+],
+
+[
+"The other <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S> is a <ANS>.",
+"The shape of the other <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S> is <ANS>.",
+"The other <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S> has a <ANS> shape.",
+"There is another <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S>; its shape is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S>; it is a <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is [made of] the same material as the <Z> <C> <M> <S>; it has a <ANS> shape."
+],
+
+[
+"The other <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S> has a <ANS> size.",
+"The [size of the] other <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S> is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S>; it is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S>; its size is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S>; it has a <ANS> size."
+],
+
+[
+"The other <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S> is [colored] <ANS>.",
+"The color of the other <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S> is <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S>; it is [colored] <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S>; its color is <ANS>."
+],
+
+[
+"The [material of the] other <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S> is [made of] <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S>; it is [made of] <ANS>.",
+"There is another <Z2> <C2> <M2> <S2> that is the same shape as the <Z> <C> <M> <S>; its material is [made of] <ANS>."
+]
+
+]
+

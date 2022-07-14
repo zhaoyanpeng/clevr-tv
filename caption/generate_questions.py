@@ -7,7 +7,7 @@
 
 from __future__ import print_function
 import argparse, json, os, itertools, random, shutil
-import time
+import time, copy
 import re
 
 import question_engine as qeng
@@ -39,8 +39,6 @@ composite nodes in program templates (filter_unique, relate_filter_unique) allow
 us to efficiently prune the search space and terminate early when we know that
 (1) or (2) will be violated.
 """
-
-
 
 parser = argparse.ArgumentParser()
 
@@ -88,6 +86,8 @@ parser.add_argument('--time_dfs', action='store_true',
     help="Time each depth-first search; must be given with --verbose")
 parser.add_argument('--profile', action='store_true',
     help="If given then run inside cProfile")
+parser.add_argument('--timeout', default=20, type=int,
+    help="Quit if no success within # seconds")
 # args = parser.parse_args()
 
 
@@ -259,7 +259,9 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
     q = {'nodes': state['nodes']}
     outputs = qeng.answer_question(q, metadata, scene_struct, all_outputs=True)
     answer = outputs[-1]
-    if answer == '__INVALID__': continue
+    if answer == '__INVALID__' or \
+        str(answer).lower() == 'no' or \
+        str(answer).lower() == 'false': continue
 
     # Check to make sure constraints are satisfied for the current state
     skip_state = False
@@ -312,16 +314,17 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
     if state['next_template_node'] == len(template['nodes']):
       # Use our rejection sampling heuristics to decide whether we should
       # keep this template instantiation
-      cur_answer_count = answer_counts[answer]
-      answer_counts_sorted = sorted(answer_counts.values())
-      median_count = answer_counts_sorted[len(answer_counts_sorted) // 2]
-      median_count = max(median_count, 5)
-      if cur_answer_count > 1.1 * answer_counts_sorted[-2]:
-        if verbose: print('skipping due to second count')
-        continue
-      if cur_answer_count > 5.0 * median_count:
-        if verbose: print('skipping due to median')
-        continue
+      if len(answer_counts) > 1:
+          cur_answer_count = answer_counts[answer]
+          answer_counts_sorted = sorted(answer_counts.values())
+          median_count = answer_counts_sorted[len(answer_counts_sorted) // 2]
+          median_count = max(median_count, 5)
+          if cur_answer_count > 1.1 * answer_counts_sorted[-2]:
+            if verbose: print('skipping due to second count')
+            continue
+          if cur_answer_count > 5.0 * median_count:
+            if verbose: print('skipping due to median')
+            continue
 
       # If the template contains a raw relate node then we need to check for
       # degeneracy at the end
@@ -479,11 +482,12 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
       })
 
   # Actually instantiate the template with the solutions we've found
-  text_questions, structured_questions, answers = [], [], []
+  tmpl_used, text_questions, structured_questions, answers = [], [], [], []
   for state in final_states:
-    structured_questions.append(state['nodes'])
+    structured_questions.append(state)
     answers.append(state['answer'])
     text = random.choice(template['text'])
+    tmpl_used.append(copy.deepcopy(text))
     for name, val in state['vals'].items():
       if val in synonyms:
         val = random.choice(synonyms[val])
@@ -492,9 +496,10 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
     text = replace_optionals(text)
     text = ' '.join(text.split())
     text = other_heuristic(text, state['vals'])
+    text = text.replace("<ANS>", str(state['answer']))
     text_questions.append(text)
 
-  return text_questions, structured_questions, answers
+  return tmpl_used, text_questions, structured_questions, answers
 
 
 
@@ -562,23 +567,25 @@ def main(args):
     # Maps a template (filename, index) to a dict mapping the answer to the
     # number of questions so far of that template type with that answer
     template_answer_counts = {}
+    failed_template_counts = {}
     node_type_to_dtype = {n['name']: n['output'] for n in metadata['functions']}
     for key, template in templates.items():
       template_counts[key[:2]] = 0
+      failed_template_counts[key[:2]] = 0
       final_node_type = template['nodes'][-1]['type']
       final_dtype = node_type_to_dtype[final_node_type]
       answers = metadata['types'][final_dtype]
       if final_dtype == 'Bool':
-        answers = [True, False]
+        answers = [True] #, False] # use only True captions
       if final_dtype == 'Integer':
         if metadata['dataset'] == 'CLEVR-v1.0':
           answers = list(range(0, 11))
       template_answer_counts[key[:2]] = {}
       for a in answers:
         template_answer_counts[key[:2]][a] = 0
-    return template_counts, template_answer_counts
+    return template_counts, template_answer_counts, failed_template_counts
 
-  template_counts, template_answer_counts = reset_counts()
+  template_counts, template_answer_counts, failed_template_counts = reset_counts()
 
   # Read file containing input scenes
   all_scenes = []
@@ -607,22 +614,36 @@ def main(args):
 
     if scene_count % args.reset_counts_every == 0:
       print('resetting counts')
-      template_counts, template_answer_counts = reset_counts()
+      failed_template_counts = {}
+      template_counts, template_answer_counts, failed_template_counts = reset_counts()
     scene_count += 1
 
     # Order templates by the number of questions we have so far for those
     # templates. This is a simple heuristic to give a flat distribution over
     # templates.
     templates_items = list(templates.items())
-    templates_items = sorted(templates_items,
-                        key=lambda x: template_counts[x[0][:2]])
+    #random.shuffle(templates_items)
+    #templates_items = sorted(templates_items,
+    #                    key=lambda x: template_counts[x[0][:2]])
     num_instantiated = 0
-    for (fn, idx), template in templates_items:
+    #for (fn, idx), template in templates_items:
+    #for itmpl in range(len(templates_items) * 2): # sampling is better, will eventually exit when full
+    for itmpl in range(len(templates_items) + 10): # sampling is better, used by `CAPTION_1.0_captions`
+
+      min_freq = 0.1 
+      all_freq = sorted(set(template_counts.values()))
+      if len(all_freq) > 2 and all_freq[0] * 15 < all_freq[1]:
+        min_freq = max(all_freq[1] / 5., min_freq)
+      weights = [1. / max(template_counts[x[0][:2]], min_freq) for x in templates_items]
+      if i % 100 == 0 and itmpl == 0 and args.verbose: # debug
+        print({aaa[0][:2]: bbb for aaa, bbb in zip(templates_items, weights)}, all_freq[:2], sorted(set(weights))[-2:])
+      (fn, idx), template = random.choices(templates_items, weights=weights, k=1)[0]
+
       if args.verbose:
         print('trying template ', fn, idx)
       if args.time_dfs and args.verbose:
         tic = time.time()
-      ts, qs, ans = instantiate_templates_dfs(
+      tmpl_used, ts, qs, ans = instantiate_templates_dfs(
                       scene_struct,
                       template,
                       metadata,
@@ -634,18 +655,18 @@ def main(args):
         toc = time.time()
         print('that took ', toc - tic)
       image_index = int(os.path.splitext(scene_fn)[0].split('_')[-1])
-      for t, q, a in zip(ts, qs, ans):
+      for this_tmpl, t, q, a in zip(tmpl_used, ts, qs, ans):
         questions.append({
-          'split': scene_info['split'],
-          'image_filename': scene_fn,
-          'image_index': image_index,
-          'image': os.path.splitext(scene_fn)[0],
-          'question': t,
+          #'split': scene_info['split'],
+          #'image_filename': scene_fn,
+          #'image_index': image_index,
+          'index': len(questions),
+          'image': image_index, #os.path.splitext(scene_fn)[0],
           'program': q,
-          'answer': a,
-          'template_filename': fn,
-          'question_family_index': idx,
-          'question_index': len(questions),
+          'caption': t,
+          'this_tmpl': this_tmpl,
+          'tmpl_type': os.path.splitext(fn)[0],
+          'tmpl_subtype': idx,
         })
       if len(ts) > 0:
         if args.verbose:
@@ -653,8 +674,10 @@ def main(args):
         num_instantiated += 1
         template_counts[(fn, idx)] += 1
       elif args.verbose:
+        failed_template_counts[(fn, idx)] += 1
         print('did not get any =(')
       if num_instantiated >= args.templates_per_image:
+        print('i am full :-)')
         break
 
   # Change "side_inputs" to "value_inputs" in all functions of all functional
@@ -669,6 +692,8 @@ def main(args):
   # no value inputs. Again this should probably be refactored, but the quick and
   # dirty solution is to keep the code above as-is, but here make "value_inputs"
   # an empty list for those functions that do not have "side_inputs". Gross.
+
+  '''
   for q in questions:
     for f in q['program']:
       if 'side_inputs' in f:
@@ -676,6 +701,7 @@ def main(args):
         del f['side_inputs']
       else:
         f['value_inputs'] = []
+  '''
 
   with open(args.output_questions_file, 'w') as f:
     print('Writing output to %s' % args.output_questions_file)
@@ -687,6 +713,9 @@ def main(args):
 
 if __name__ == '__main__':
   args = parser.parse_args()
+  seed = os.path.basename(args.output_questions_file)
+  print(f"{args}\nseed from `{seed}`")
+  random.seed(seed)
   if args.profile:
     import cProfile
     cProfile.run('main(args)')
