@@ -10,6 +10,10 @@ import math, sys, random, argparse, json, os, tempfile
 from datetime import datetime as dt
 from collections import Counter
 
+import object_bbox
+import numpy as np
+import subprocess
+
 """
 Renders random scenes using Blender, each with with a random number of objects;
 each object has a random size, position, color, and shape. Objects will be
@@ -44,19 +48,19 @@ if INSIDE_BLENDER:
 parser = argparse.ArgumentParser()
 
 # Input options
-parser.add_argument('--base_scene_blendfile', default='data/base_scene.blend',
+parser.add_argument('--base_scene_blendfile', default='config/base_scene.blend',
     help="Base blender file on which all scenes are based; includes " +
           "ground plane, lights, and camera.")
-parser.add_argument('--properties_json', default='data/properties.json',
+parser.add_argument('--properties_json', default='config/properties.json',
     help="JSON file defining objects, materials, sizes, and colors. " +
          "The \"colors\" field maps from CLEVR color names to RGB values; " +
          "The \"sizes\" field maps from CLEVR size names to scalars used to " +
          "rescale object models; the \"materials\" and \"shapes\" fields map " +
          "from CLEVR material and shape names to .blend files in the " +
          "--object_material_dir and --shape_dir directories respectively.")
-parser.add_argument('--shape_dir', default='data/shapes',
+parser.add_argument('--shape_dir', default='config/shapes',
     help="Directory where .blend files for object models are stored")
-parser.add_argument('--material_dir', default='data/materials',
+parser.add_argument('--material_dir', default='config/materials',
     help="Directory where .blend files for materials are stored")
 parser.add_argument('--shape_color_combos_json', default=None,
     help="Optional path to a JSON file mapping shape names to a list of " +
@@ -240,6 +244,8 @@ def render_scene(args,
       bpy.context.user_preferences.system.compute_device = 'CUDA_0'
     else:
       cycles_prefs = bpy.context.user_preferences.addons['cycles'].preferences
+      #devices = bpy.context.user_preferences.addons['cycles'].preferences.devices
+      #print("xxx {}".format(list(devices)))
       cycles_prefs.compute_device_type = 'CUDA'
 
   # Some CYCLES-specific stuff
@@ -254,8 +260,7 @@ def render_scene(args,
   # This will give ground-truth information about the scene and its objects
   scene_struct = {
       'split': output_split,
-      'image_index': output_index,
-      'image_filename': os.path.basename(output_image),
+      'image': output_index,
       'objects': [],
       'directions': {},
   }
@@ -307,17 +312,88 @@ def render_scene(args,
       bpy.data.objects['Lamp_Fill'].location[i] += rand(args.fill_light_jitter)
 
   # Now make some random objects
-  objects, blender_objects = add_random_objects(scene_struct, num_objects, args, camera)
+  objects, blender_objects, mask_bbox = add_random_objects(scene_struct, num_objects, args, camera)
+
+
+  ##### estimate bbox & mask
+  box_dict = object_bbox.main(bpy.context, blender_objects)
+
+  def build_rendermask_graph(num_obj):
+    # switch on nodes
+    bpy.context.scene.use_nodes = True
+    tree = bpy.context.scene.node_tree
+    links = tree.links
+      
+    # clear default nodes
+    for n in tree.nodes:
+      tree.nodes.remove(n)
+        
+    # create input render layer node
+    rl = tree.nodes.new('CompositorNodeRLayers')      
+    rl.location = 128,128 #185,285
+
+    scene = bpy.context.scene
+    nodes = scene.node_tree.nodes
+
+    render_layers = nodes['Render Layers']
+
+    ofile_nodes = [nodes.new("CompositorNodeOutputFile") for _ in range(num_obj)]
+    for _i, of_node in enumerate(ofile_nodes):    
+      of_node.base_path =  "./.cache/indexob{}_{}".format(_i, output_index)
+
+    idmask_list = [nodes.new("CompositorNodeIDMask") for _ in range(num_obj)]
+    for _i, o_node in enumerate(idmask_list):    
+      o_node.index = _i + 1
+    
+    bpy.data.scenes['Scene'].render.layers['RenderLayer'].use_pass_object_index = True
+
+    for _i in range(num_obj):
+      scene.node_tree.links.new(render_layers.outputs['IndexOB'], idmask_list[_i].inputs[0])
+      scene.node_tree.links.new(idmask_list[_i].outputs[0], ofile_nodes[_i].inputs['Image'])
+
+  def get_diff_obj_points():
+    obj_index = dict()
+    index = 0
+    for obj in blender_objects:
+      index += 1
+      obj.pass_index = index
+      obj_index[obj.name] = index
+    return index
+
+  index = get_diff_obj_points()
+  build_rendermask_graph(index)
+  ##### estimate bbox & mask
+
 
   # Render the scene and dump the scene data structure
   scene_struct['objects'] = objects
-  scene_struct['relationships'] = compute_all_relationships(scene_struct)
+  scene_struct['relations'] = compute_all_relationships(scene_struct)
   while True:
     try:
       bpy.ops.render.render(write_still=True)
       break
     except Exception as e:
       print(e)
+
+
+  ##### restore mask
+  cmd = ['python','./object_mask.py', str(index), str(output_index)]
+  res = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+  res.wait()
+  if res.returncode != 0:
+    print("  os.wait:exit status != 0\n")
+    result = res.stdout.read()
+    print ("after read: {}".format(result))
+    raise Exception('error in img2json')
+
+  obj_mask = json.load(open('/tmp/obj_mask_{}.json'.format(output_index)))
+  _path = '/tmp/obj_mask_{}.json'.format(output_index)
+  os.system('rm ' + _path)
+  
+  scene_struct['mask'] = obj_mask #mask_bbox[0] #
+  scene_struct['bbox'] = box_dict
+  ##### restore mask
+
 
   with open(output_scene, 'w') as f:
     json.dump(scene_struct, f, indent=2)
@@ -423,17 +499,17 @@ def add_random_objects(scene_struct, num_objects, args, camera):
     # Record data about the object in the scene data structure
     pixel_coords = utils.get_camera_coords(camera, obj.location)
     objects.append({
-      'shape': obj_name_out,
       'size': size_name,
-      'material': mat_name_out,
-      '3d_coords': tuple(obj.location),
-      'rotation': theta,
-      'pixel_coords': pixel_coords,
       'color': color_name,
+      'shape': obj_name_out,
+      'material': mat_name_out,
+      'rotation': theta,
+      'coord_3d': tuple(obj.location),
+      'coord_px': pixel_coords,
     })
 
   # Check that all objects are at least partially visible in the rendered image
-  all_visible = check_visibility(blender_objects, args.min_pixels_per_object)
+  all_visible, mask_bbox = check_visibility(blender_objects, args.min_pixels_per_object)
   if not all_visible:
     # If any of the objects are fully occluded then start over; delete all
     # objects from the scene and place them all again.
@@ -442,7 +518,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       utils.delete_object(obj)
     return add_random_objects(scene_struct, num_objects, args, camera)
 
-  return objects, blender_objects
+  return objects, blender_objects, mask_bbox
 
 
 def compute_all_relationships(scene_struct, eps=0.2):
@@ -459,11 +535,11 @@ def compute_all_relationships(scene_struct, eps=0.2):
     if name == 'above' or name == 'below': continue
     all_relationships[name] = []
     for i, obj1 in enumerate(scene_struct['objects']):
-      coords1 = obj1['3d_coords']
+      coords1 = obj1['coord_3d']
       related = set()
       for j, obj2 in enumerate(scene_struct['objects']):
         if obj1 == obj2: continue
-        coords2 = obj2['3d_coords']
+        coords2 = obj2['coord_3d']
         diff = [coords2[k] - coords1[k] for k in [0, 1, 2]]
         dot = sum(diff[k] * direction_vec[k] for k in [0, 1, 2])
         if dot > eps:
@@ -487,16 +563,71 @@ def check_visibility(blender_objects, min_pixels_per_object):
   object_colors = render_shadeless(blender_objects, path=path)
   img = bpy.data.images.load(path)
   p = list(img.pixels)
-  color_count = Counter((p[i], p[i+1], p[i+2], p[i+3])
-                        for i in range(0, len(p), 4))
+  pixels = [(p[i], p[i+1], p[i+2], p[i+3]) for i in range(0, len(p), 4)]
+  color_count = Counter(pixels)
   os.remove(path)
   if len(color_count) != len(blender_objects) + 1:
-    return False
+    return False, None
   for _, count in color_count.most_common():
     if count < min_pixels_per_object:
-      return False
-  return True
+      return False, None
 
+  ## compute masks # incorrect masks, discarded
+  #keys = [k for k in list(color_count.keys()) if k[:3] in color_true]
+  #assert len(keys) == len(blender_objects), "invalid keys"
+  #masks = {}
+  #for ikey, k in enumerate(keys):
+  #  iobj = color_true.index(k[:3])
+  #  mask = object_mask(k, pixels)
+  #  masks[iobj] = mask #ikey 
+  return True, (None, None)
+
+def object_mask(color, img):
+  img = [int(_x==color) for _x in img]
+  pre = 0
+  has = 0
+  lis = []
+  for _x in img:
+    if _x == pre:
+      has += 1
+    else:    
+      lis.append(has)
+      pre = 1-pre
+      has = 1
+  if has != 0:
+    lis.append(has)
+  return ','.join([str(it) for it in lis])
+
+def color_map(factor=0.5372549295425415):
+    # factor is the real pixel after rendering
+    # it corressponds to diffuse rgb value .25
+    all_bs = list()
+    for i in range(8): # binary color map for 3 bits
+        r = i
+        bs = list()
+        while r != 0:
+            b = r  % 2
+            r = r // 2
+            bs.append(b)
+        bs = list(reversed(bs))
+        bs = (0,) * (3 - len(bs)) + tuple(bs)
+        all_bs.append(bs)
+
+    bs_all, bs_true = list(), list()
+    bs_all.append(all_bs[0])
+    bs_true.append(all_bs[0])
+    for bs in all_bs[1:]: # extend the color map
+        bs_ = tuple([x * 0.25 for x in bs])
+        bs_all.append(bs_)
+        bs_all.append(bs)
+
+        bs_ = tuple([x * factor for x in bs])
+        bs_true.append(bs_)
+        bs_true.append(bs)
+    return bs_all, bs_true
+
+color_map, color_true = color_map()
+#print("{}\n{}".format(color_map, color_true))
 
 def render_shadeless(blender_objects, path='flat.png'):
   """
@@ -534,6 +665,7 @@ def render_shadeless(blender_objects, path='flat.png'):
     while True:
       r, g, b = [random.random() for _ in range(3)]
       if (r, g, b) not in object_colors: break
+    #r, g, b = color_map[i]
     object_colors.add((r, g, b))
     mat.diffuse_color = [r, g, b]
     mat.use_shadeless = True
@@ -565,6 +697,11 @@ if __name__ == '__main__':
     # Run normally
     argv = utils.extract_args()
     args = parser.parse_args(argv)
+    
+    seed = os.path.basename(args.output_scene_file)
+    print("{args}\nseed from `{seed}`".format(args=args, seed=seed))
+    random.seed(seed)
+
     main(args)
   elif '--help' in sys.argv or '-h' in sys.argv:
     parser.print_help()
